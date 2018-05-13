@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.model.UploadedFile;
 import com.java.fileupload.FileUpload;
+import javax.faces.context.FacesContext;
 /**
  *
  * @author skyli
@@ -20,7 +21,8 @@ import com.java.fileupload.FileUpload;
 public class FileUploadBean implements Serializable {
     private final static Logger logger = Logger.getLogger(FileUploadBean.class.getName());
     private ArrayList<FileUpload> files = new ArrayList<FileUpload>();
-
+    private Boolean enableUpload;
+    
     public void listener(FileUploadEvent event) throws Exception {
         UploadedFile itemTemp = event.getUploadedFile();
         FileUpload item = new FileUpload();
@@ -30,10 +32,14 @@ public class FileUploadBean implements Serializable {
         item.setData(itemTemp.getData());
         
         files.add(item);
+        logger.info("listener");
     }
 
     public String clearUploadData() {
-        files.clear();
+        files.clear();        
+        setEnableUpload(false);
+        
+        logger.info("clear -> getEnableUpload -> " + getEnableUpload());
         return null;
     }
 
@@ -59,11 +65,36 @@ public class FileUploadBean implements Serializable {
     
     public void setInitialFiles(){
         FileUpload item = new FileUpload();
+        
+        //remove elementos do cache
+        clearUploadData();
+        
         item.setName("Default file");
         item.setLength(564000);
         item.setData(null);
-        files.add(item);
         
-        logger.info("rola");
+        if (files.size() == 0){
+            files.add(item);
+            setEnableUpload(true);
+        }
+        
+        logger.info(" setInitialFiles ");
+        logger.info(" getEnableUpload " + getEnableUpload());
     }
+
+    public Boolean getEnableUpload() {
+        return enableUpload;
+    }
+
+    public void setEnableUpload(Boolean enableUpload) {
+        this.enableUpload = enableUpload;
+    }
+    
+    public void changeStatus(){
+        if (getEnableUpload())
+            setEnableUpload(false);
+        else
+            setEnableUpload(true);
+    }
+    
 }

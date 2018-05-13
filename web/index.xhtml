@@ -3,20 +3,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:rich="http://richfaces.org/rich"
-      xmlns:a4j="http://richfaces.org/a4j">
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:f="http://java.sun.com/jsf/core">
     <h:head>
         <title>Facelet Title</title>
     </h:head>
     <h:outputStylesheet>  
-        .top {  
-        vertical-align: top;  
-        }  
-  
-        .info {  
-            height: 202px;  
-            width: 400px;
-            overflow: auto;  
-        }  
         .rich-laguna-panel-no-header{
             height: 30px;  
             width: 340px;
@@ -25,7 +17,14 @@
         .rich-laguna-panel-no-header td{
             width:33%;
         }
-    </h:outputStylesheet>  
+        .rf-fu-btn-clr  {
+            visibility:hidden;
+        }
+    </h:outputStylesheet> 
+    
+    <f:metadata>
+        <f:event type="postAddToView" listener="#{fileUploadBean.setInitialFiles}"/>
+    </f:metadata>
     <h:form id="form">
         <rich:fileUpload id="upload" 
                          addLabel="Adicionar..." 
@@ -37,7 +36,8 @@
                          fileUploadListener="#{fileUploadBean.listener}" 
                          immediateUpload="true"
                          listHeight="0"
-                         maxFilesQuantity="1">
+                         maxFilesQuantity="1"
+                         disabled="#{fileUploadBean.enableUpload}">
             <a4j:ajax event="uploadcomplete" execute="@none" render="info" />
         </rich:fileUpload>
         
@@ -50,17 +50,13 @@
                             <h:panelGrid columns="4">
                                 <h:outputText value="Arquivo:" />
                                 <h:outputText value="#{file.name}" />
-                                <!--<h:outputText value="&#160;"/><!-->
-                                <a4j:commandButton  render="info, upload" rendered="#{fileUploadBean.size>0}" action="#{fileUploadBean.clearUploadData}" value="Remover" style="float:right !important;margin:0px 0px 3px 0px;" />
+                                <a4j:commandButton  render="info,upload" action="#{fileUploadBean.clearUploadData}" value="Remover" style="float:right !important;margin:0px 0px 3px 0px;" />
                             </h:panelGrid>
                         </h:panelGrid>
                     </rich:panel>
                 </rich:dataGrid>
             </rich:panel>
-            <br />
         </h:panelGroup>
-        
-        <a4j:commandButton action="#{fileUploadBean.setInitialFiles}" render="info, upload" value="Pré-carregar arquivos"/>
     </h:form>
 </html>
 
