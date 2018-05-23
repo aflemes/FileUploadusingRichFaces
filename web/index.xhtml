@@ -20,10 +20,9 @@
         .rf-fu-btn-clr  {
             visibility:hidden;
         }
-    </h:outputStylesheet> 
-    
-    <f:metadata>
-        <f:event type="postAddToView" listener="#{fileUploadBean.setInitialFiles}"/>
+    </h:outputStylesheet>
+    <f:metadata>    
+       <f:event type="postAddToView" listener="#{fileUploadBean.setInitialFiles}"/>       
     </f:metadata>
     <h:form id="form">
         <rich:fileUpload id="upload" 
@@ -32,19 +31,19 @@
 			 clearLabel="Limpar"
                          deleteLabel="Remover"
                          doneLabel="Concluído"
+                         listHeight="0px"
 			 uploadLabel="Carregar arquivo..."
-                         fileUploadListener="#{fileUploadBean.listener}" 
-                         immediateUpload="true"
-                         listHeight="0"
+                         fileUploadListener="#{fileUploadBean.listener}"                                                 
                          maxFilesQuantity="1"
-                         disabled="#{fileUploadBean.enableUpload}">
-            <a4j:ajax event="uploadcomplete" execute="@none" render="info" />
+                         immediateUpload="true"
+                         disabled="#{fileUploadBean.enableUpload}">            
+            <a4j:ajax event="sizerejected"   listener="#{fileUploadBean.sizeRejected}" render="message"/>               
         </rich:fileUpload>
         
         <h:panelGroup id="info" layout="block" style="width: 400px; margin-top: 10px">
             <rich:panel bodyClass="info">
                 <h:outputText value="Nenhum arquivo adicionado" rendered="#{fileUploadBean.size==0}" />
-                <rich:dataGrid columns="1" value="#{fileUploadBean.files}" var="file" rowKeyVar="row">
+                <rich:dataGrid columns="2" value="#{fileUploadBean.files}" var="file" rowKeyVar="row">
                     <rich:panel bodyClass="rich-laguna-panel-no-header">
                         <h:panelGrid columns="4">
                             <h:panelGrid columns="4">
@@ -57,6 +56,7 @@
                 </rich:dataGrid>
             </rich:panel>
         </h:panelGroup>
+        <h:messages errorStyle="color: red" infoStyle="color: blue" warnStyle="color: orange" id="message"/>
     </h:form>
 </html>
 

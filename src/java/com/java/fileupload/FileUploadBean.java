@@ -13,7 +13,9 @@ import java.util.logging.Logger;
 import org.richfaces.event.FileUploadEvent;
 import org.richfaces.model.UploadedFile;
 import com.java.fileupload.FileUpload;
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 /**
  *
  * @author skyli
@@ -22,6 +24,7 @@ public class FileUploadBean implements Serializable {
     private final static Logger logger = Logger.getLogger(FileUploadBean.class.getName());
     private ArrayList<FileUpload> files = new ArrayList<FileUpload>();
     private Boolean enableUpload;
+    private Boolean showMessage;
     
     public void listener(FileUploadEvent event) throws Exception {
         UploadedFile itemTemp = event.getUploadedFile();
@@ -64,7 +67,7 @@ public class FileUploadBean implements Serializable {
     }
     
     public void setInitialFiles(){
-        FileUpload item = new FileUpload();
+        /*FileUpload item = new FileUpload();
         
         //remove elementos do cache
         clearUploadData();
@@ -77,9 +80,8 @@ public class FileUploadBean implements Serializable {
             files.add(item);
             setEnableUpload(true);
         }
-        
-        logger.info(" setInitialFiles ");
-        logger.info(" getEnableUpload " + getEnableUpload());
+        */
+        logger.info(" setInitialFiles ");        
     }
 
     public Boolean getEnableUpload() {
@@ -96,5 +98,35 @@ public class FileUploadBean implements Serializable {
         else
             setEnableUpload(true);
     }
+
+    public Boolean getShowMessage() {
+        return showMessage;
+    }
+
+    public void setShowMessage(Boolean showMessage) {
+        this.showMessage = showMessage;
+    } 
     
+    public void trocaMessage(){
+        if (getShowMessage())
+            setShowMessage(false);
+        else
+            setShowMessage(true);
+    }
+    
+    public void sizeRejected(AjaxBehaviorEvent event){
+        logger.info("errorHandle");
+        
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Nao foi possivel anexar o arquivo informado!",null));
+    }
+    
+    public void uploadComplete(AjaxBehaviorEvent event){
+        logger.info("uploadComplete");
+        if (getSize() > 0)
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "",null));
+    }
+    
+    public void fileSubmit(){
+        logger.info("fileSubmit");
+    }
 }
